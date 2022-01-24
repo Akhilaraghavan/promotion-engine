@@ -1,4 +1,4 @@
-package com.aragh.promotion.model;
+package com.aragh.promotion;
 
 import com.aragh.model.Item;
 

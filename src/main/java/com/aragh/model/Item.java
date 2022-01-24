@@ -11,13 +11,14 @@ public class Item {
     private BigDecimal totalPriceAfterPromotions;
     private boolean isPromotionApplied;
 
-    private Item(String skuId, Integer quantity) {
+    private Item(String skuId, Integer quantity, BigDecimal itemPrice) {
         this.skuId = Objects.requireNonNull(skuId, "Stock Keeping unit Id is not set");
         this.quantity = Objects.requireNonNull(quantity, "Quantity is not set");
+        this.itemPrice = Objects.requireNonNull(itemPrice, "Item price is not set");
     }
 
-    public static Item of(String skuId, Integer quantity) {
-        return new Item(skuId, quantity);
+    public static Item of(String skuId, Integer quantity, BigDecimal itemPrice) {
+        return new Item(skuId, quantity, itemPrice);
     }
 
     public String getSkuId() {

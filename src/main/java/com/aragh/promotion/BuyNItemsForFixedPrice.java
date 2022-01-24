@@ -1,4 +1,4 @@
-package com.aragh.promotion.model;
+package com.aragh.promotion;
 
 import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.model.Item;
@@ -57,18 +57,16 @@ public class BuyNItemsForFixedPrice implements Promotion {
 
         Integer itemQuantity = itemToApplyPromotion.getQuantity();
         if (itemQuantity < promotionQuantity) {
-            LOGGER.info("Promotion is not applied as the item quantity is less than promotionQuantity");
+            LOGGER.fine("Promotion is not applied as the item quantity is less than promotionQuantity");
             return;
         }
 
         BigDecimal finalPrice = new BigDecimal(0);
-        int numberOfItemsLeft = itemQuantity;
-        while (numberOfItemsLeft >= promotionQuantity) {
-            numberOfItemsLeft = numberOfItemsLeft/promotionQuantity;
-            finalPrice = finalPrice.add( price);
-        }
+        int numberOfItemsLeftWithNoPromotion = itemQuantity % promotionQuantity;
+        int applicableForPromotion =  itemQuantity/promotionQuantity;
 
-        finalPrice = finalPrice.add(itemToApplyPromotion.getItemPrice().multiply(new BigDecimal(numberOfItemsLeft)));
+        finalPrice = finalPrice.add(price.multiply(BigDecimal.valueOf(applicableForPromotion)));
+        finalPrice = finalPrice.add(itemToApplyPromotion.getItemPrice().multiply(BigDecimal.valueOf(numberOfItemsLeftWithNoPromotion)));
 
         itemToApplyPromotion.setTotalPriceAfterPromotions(finalPrice);
         itemToApplyPromotion.promotionApplied();

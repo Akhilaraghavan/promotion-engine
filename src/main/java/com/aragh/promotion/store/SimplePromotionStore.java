@@ -1,6 +1,6 @@
 package com.aragh.promotion.store;
 
-import com.aragh.promotion.model.Promotion;
+import com.aragh.promotion.Promotion;
 
 import java.util.LinkedHashMap;
 import java.util.List;

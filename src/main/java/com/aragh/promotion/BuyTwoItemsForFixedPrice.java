@@ -1,4 +1,4 @@
-package com.aragh.promotion.model;
+package com.aragh.promotion;
 
 import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.model.Item;
@@ -56,7 +56,7 @@ public class BuyTwoItemsForFixedPrice implements Promotion {
                 .findFirst()
                 .orElseThrow(() ->  new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + items));
 
-        Item secondItem = items.stream().filter(item -> skuId1.equals(item.getSkuId()))
+        Item secondItem = items.stream().filter(item -> skuId2.equals(item.getSkuId()))
                 .findFirst()
                 .orElseThrow(() ->  new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + items));
 
