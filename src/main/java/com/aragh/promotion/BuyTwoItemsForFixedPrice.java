@@ -73,7 +73,7 @@ public class BuyTwoItemsForFixedPrice implements Promotion {
 
         //Left over from right added to promotional price (cost of C&D)
         int secondItemsRemainingAfterPromotion = skuId2Item.getQuantity() - applicableForPromotion;
-        BigDecimal secondItemTotals = promotionAppliedPrice.add(skuId1Item.getItemPrice()
+        BigDecimal secondItemTotals = promotionAppliedPrice.add(skuId2Item.getItemPrice()
                 .multiply(new BigDecimal(secondItemsRemainingAfterPromotion)));
         skuId2Item.setTotalPriceAfterPromotions(secondItemTotals);
         skuId2Item.promotionApplied();
