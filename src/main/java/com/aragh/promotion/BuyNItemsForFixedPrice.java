@@ -51,11 +51,11 @@ public class BuyNItemsForFixedPrice implements Promotion {
     @Override
     public void apply(List<Item> items) {
 
-        Item itemToApplyPromotion = items.stream().filter(item -> skuId.equals(item.getSkuId()))
+        Item skuidItem = items.stream().filter(item -> skuId.equals(item.getSkuId()))
                 .findFirst()
                 .orElseThrow(() ->  new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + items));
 
-        Integer itemQuantity = itemToApplyPromotion.getQuantity();
+        Integer itemQuantity = skuidItem.getQuantity();
         if (itemQuantity < promotionQuantity) {
             LOGGER.fine("Promotion is not applied as the item quantity is less than promotionQuantity");
             return;
@@ -66,10 +66,10 @@ public class BuyNItemsForFixedPrice implements Promotion {
         int applicableForPromotion =  itemQuantity/promotionQuantity;
 
         finalPrice = finalPrice.add(price.multiply(BigDecimal.valueOf(applicableForPromotion)));
-        finalPrice = finalPrice.add(itemToApplyPromotion.getItemPrice().multiply(BigDecimal.valueOf(numberOfItemsLeftWithNoPromotion)));
+        finalPrice = finalPrice.add(skuidItem.getItemPrice().multiply(BigDecimal.valueOf(numberOfItemsLeftWithNoPromotion)));
 
-        itemToApplyPromotion.setTotalPriceAfterPromotions(finalPrice);
-        itemToApplyPromotion.promotionApplied();
+        skuidItem.setTotalPriceAfterPromotions(finalPrice);
+        skuidItem.promotionApplied();
     }
 
     @Override

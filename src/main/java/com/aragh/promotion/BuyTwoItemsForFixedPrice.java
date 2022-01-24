@@ -52,27 +52,30 @@ public class BuyTwoItemsForFixedPrice implements Promotion {
     @Override
     public void apply(List<Item> items) {
 
-        Item firstItem = items.stream().filter(item -> skuId1.equals(item.getSkuId()))
+        Item skuId1Item = items.stream().filter(item -> skuId1.equals(item.getSkuId()))
                 .findFirst()
                 .orElseThrow(() ->  new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + items));
 
-        Item secondItem = items.stream().filter(item -> skuId2.equals(item.getSkuId()))
+        Item skuId2Item = items.stream().filter(item -> skuId2.equals(item.getSkuId()))
                 .findFirst()
                 .orElseThrow(() ->  new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + items));
 
-        int minQuantity = Math.min(firstItem.getQuantity(), secondItem.getQuantity());
-        BigDecimal minQuantityPrice = new BigDecimal(0);
-        minQuantityPrice = minQuantityPrice.add(price.multiply(new BigDecimal(minQuantity)));
+        //Get quantity applicable for promotion
+        int applicableForPromotion = Math.min(skuId1Item.getQuantity(), skuId2Item.getQuantity());
+        BigDecimal promotionAppliedPrice = new BigDecimal(0);
+        promotionAppliedPrice = promotionAppliedPrice.add(price.multiply(new BigDecimal(applicableForPromotion)));
 
-        int firstItemsLeft = firstItem.getQuantity() - minQuantity;
-        BigDecimal firstItemTotals = firstItem.getItemPrice().multiply(new BigDecimal(firstItemsLeft));
-        firstItem.setTotalPriceAfterPromotions(firstItemTotals);
-        firstItem.promotionApplied();
+        //Left over from is priced as is for the remaining
+        int firstItemsRemainingAfterPromotion = skuId1Item.getQuantity() - applicableForPromotion;
+        BigDecimal firstItemTotals = skuId1Item.getItemPrice().multiply(new BigDecimal(firstItemsRemainingAfterPromotion));
+        skuId1Item.setTotalPriceAfterPromotions(firstItemTotals);
+        skuId1Item.promotionApplied();
 
-        int secondItemsLeft = secondItem.getQuantity() - minQuantity;
-        BigDecimal secondItemTotals = minQuantityPrice.add(firstItem.getItemPrice()
-                .multiply(new BigDecimal(secondItemsLeft)));
-        secondItem.setTotalPriceAfterPromotions(secondItemTotals);
-        secondItem.promotionApplied();
+        //Left over from right added to promotional price (cost of C&D)
+        int secondItemsRemainingAfterPromotion = skuId2Item.getQuantity() - applicableForPromotion;
+        BigDecimal secondItemTotals = promotionAppliedPrice.add(skuId1Item.getItemPrice()
+                .multiply(new BigDecimal(secondItemsRemainingAfterPromotion)));
+        skuId2Item.setTotalPriceAfterPromotions(secondItemTotals);
+        skuId2Item.promotionApplied();
     }
 }
