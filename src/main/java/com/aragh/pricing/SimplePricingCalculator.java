@@ -9,7 +9,6 @@ public class SimplePricingCalculator implements PricingCalculator {
 
     @Override
     public BigDecimal getTotals(Cart cart) {
-
         return cart.getItems().
                 stream().
                 map(Item::getTotalPriceAfterPromotions)
