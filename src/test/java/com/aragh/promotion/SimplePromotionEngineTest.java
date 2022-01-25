@@ -5,10 +5,10 @@ import com.aragh.model.Item;
 import com.aragh.model.Product;
 import com.aragh.promotion.engine.PromotionEngine;
 import com.aragh.promotion.engine.SimplePromotionEngine;
-import com.aragh.promotion.store.PromotionStore;
 import com.aragh.promotion.store.InMemoryPromotionStore;
-import com.aragh.store.ProductStore;
+import com.aragh.promotion.store.PromotionStore;
 import com.aragh.store.InMemoryProductStore;
+import com.aragh.store.ProductStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,13 +58,16 @@ public class SimplePromotionEngineTest {
      */
     @Test
     public void testScenarioA_NoPromotionsApplied() {
+        //Assign
         Cart cart = new Cart();
         cart.add(Item.of('A', 1, getItemPrice('A')));
         cart.add(Item.of('B', 1, getItemPrice('B')));
         cart.add(Item.of('C', 1, getItemPrice('C')));
 
+        //Act
         promotionEngine.applyPromotion(cart);
 
+        //Assert
         cart.getItems().forEach(item -> assertFalse(item.isPromotionApplied()));
     }
 
@@ -76,13 +79,16 @@ public class SimplePromotionEngineTest {
      */
     @Test
     public void testScenarioB_PromotionAppliedOnAAndB() {
+        //Assign
         Cart cart = new Cart();
         cart.add(Item.of('A', 5, getItemPrice('A')));
         cart.add(Item.of('B', 5, getItemPrice('B')));
         cart.add(Item.of('C', 1, getItemPrice('C')));
 
+        //Act
         promotionEngine.applyPromotion(cart);
 
+        //Assert
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
         assertEquals(BigDecimal.valueOf(230), itemA.getTotalPriceAfterPromotion());
@@ -104,7 +110,7 @@ public class SimplePromotionEngineTest {
      */
     @Test
     public void testScenarioB_PromotionAppliedOnAAndB_ApplyOnlyOne() {
-        // This promotion replaces the existing BuyNItemsForFixedPrice for A
+        // This promotion is not applied, order of insertion is the sort order.
         promotionStore.save(new BuyNItemsOfSKUForFixedPrice('A', 2, BigDecimal.valueOf(100)));
 
         Cart cart = new Cart();
@@ -116,7 +122,7 @@ public class SimplePromotionEngineTest {
 
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(250), itemA.getTotalPriceAfterPromotion());
+        assertEquals(BigDecimal.valueOf(230), itemA.getTotalPriceAfterPromotion());
 
         Item itemB = cart.getItems().get(1);
         assertTrue(itemB.isPromotionApplied());
@@ -165,22 +171,28 @@ public class SimplePromotionEngineTest {
      *
      * 3*A 130
      * 5*B 45 + 45 +30 - 120
-     * 1*C -
+     * 3*C - 1 item 0, 2*20
      * 1*D 30
+     *
+     * Promotion rules are mutually exclusive and if one is applied on SKU,
+     * the other is ignored.
      */
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems_WithOneNotApplied() {
-        // This promotion replaces the existing BuyNItemsForFixedPrice for A
+        // This promotion is not applied
         promotionStore.save(new BuyNItemsOfSKUForFixedPrice('C', 2, BigDecimal.valueOf(15)));
 
+        //Assign
         Cart cart = new Cart();
         cart.add(Item.of('A', 3, getItemPrice('A')));
         cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of('C', 3, getItemPrice('C')));
         cart.add(Item.of('D', 1, getItemPrice('D')));
 
+        //Act
         promotionEngine.applyPromotion(cart);
 
+        //Assert
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
         assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotion());
@@ -191,7 +203,7 @@ public class SimplePromotionEngineTest {
 
         Item itemC = cart.getItems().get(2);
         assertTrue(itemC.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotion());
+        assertEquals(BigDecimal.valueOf(40), itemC.getTotalPriceAfterPromotion());
 
         Item itemD = cart.getItems().get(3);
         assertTrue(itemD.isPromotionApplied());
@@ -207,9 +219,6 @@ public class SimplePromotionEngineTest {
      */
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems_WithRemainingItemsAfterPromotionForD() {
-        // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsOfSKUForFixedPrice('C', 2, BigDecimal.valueOf(15)));
-
         Cart cart = new Cart();
         cart.add(Item.of('A', 3, getItemPrice('A')));
         cart.add(Item.of('B', 5, getItemPrice('B')));
