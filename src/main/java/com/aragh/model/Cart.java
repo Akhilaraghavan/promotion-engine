@@ -20,7 +20,7 @@ public class Cart {
     public void add(Item item) {
         if (items.contains(item)) {
             int index = items.indexOf(item);
-            items.get(index).updateQuantity();
+            items.get(index).updateQuantity(item.getQuantity());
             return;
         }
         items.add(item);

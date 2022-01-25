@@ -12,6 +12,8 @@ public class Item {
 
     /**
      *  Item Price
+     *  The type is BigDecimal as floats and double are not suited for price
+     *  calculations
      */
     private final BigDecimal itemPrice;
 
@@ -56,8 +58,8 @@ public class Item {
         return isPromotionApplied;
     }
 
-    public void updateQuantity() {
-        quantity += 1;
+    public void updateQuantity(int quantity) {
+        this.quantity += quantity;
     }
 
     public BigDecimal getItemPrice() {
