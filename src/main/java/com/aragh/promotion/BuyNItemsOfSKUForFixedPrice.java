@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
 
@@ -19,39 +20,25 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
     private boolean enabled;
 
     public BuyNItemsOfSKUForFixedPrice(Character skuId, int promotionQuantity, BigDecimal promotionPrice) {
-        this.id = skuId.hashCode();
+        this.id = skuId.hashCode() * promotionQuantity;
         this.promotionQuantity = promotionQuantity;
         this.skuId = Objects.requireNonNull(skuId, "Stock keeping unit is not set");
         if (promotionQuantity <= 0) {
             throw new IllegalArgumentException("Number of items should be greater than 0");
         }
-        this.promotionPrice = Objects.requireNonNull(promotionPrice, "Promotion promotionPrice is not set");
+        this.promotionPrice = Objects.requireNonNull(promotionPrice, "Promotion price is not set");
         if (this.promotionPrice.signum() <= 0) {
             throw new IllegalArgumentException("Promotion price is incorrect. Price should be a positive non-zero number");
         }
         this.enabled = true;
     }
 
-    @Override
-    public List<Character> getPromotionSKUIds() {
-        return List.of(skuId);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
+    /**
+     * Apply promotion for the SKU. If there is remaining quantity,
+     * the normal item price is applied on those and the total price
+     * is calculated.
+     * @param subject PromotionSubject with a list of Items {@link Item}
+     */
     @Override
     public void apply(PromotionSubject subject) {
 
@@ -72,6 +59,26 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
 
         skuIdItem.setTotalPriceAfterPromotion(finalPrice);
         skuIdItem.promotionApplied();
+    }
+
+    @Override
+    public List<Character> getPromotionSKUIds() {
+        return List.of(skuId);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override
