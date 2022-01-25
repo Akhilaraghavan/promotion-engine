@@ -1,6 +1,7 @@
 package com.aragh.promotion;
 
 import com.aragh.model.Item;
+import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.promotion.model.PromotionSubject;
 
 import java.math.BigDecimal;
@@ -36,8 +37,10 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
     @Override
     public void apply(PromotionSubject subject) {
 
-        Item skuId1Item = getItem(skuId1, subject);
-        Item skuId2Item = getItem(skuId2, subject);
+        Item skuId1Item = subject.getItem(skuId1)
+                .orElseThrow(() -> new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + subject));
+        Item skuId2Item = subject.getItem(skuId2)
+                .orElseThrow(() -> new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + subject));
 
         //Get quantity applicable for promotion
         int applicableForPromotion = Math.min(skuId1Item.getQuantity(), skuId2Item.getQuantity());

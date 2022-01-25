@@ -29,13 +29,13 @@ import java.util.regex.Pattern;
  */
 public class CartCheckoutMain {
 
-    private static final Map<Pattern, Class<? extends PromotionOffer>> promotionMap = new HashMap<>();
-    private static final Pattern ITEM_INPUT_PATTERN = Pattern.compile("(\\d)\\*(\\w)");
+    private static final Map<Pattern, Class<? extends PromotionOffer>> PROMOTION_MAP = new HashMap<>();
+    private static final Pattern ITEM_PATTERN = Pattern.compile("(\\d)\\*(\\w)");
 
     //Ideally, I would have a builder/factory to define and parse the promotions
     static {
-        promotionMap.put(Pattern.compile("(\\d) of (\\w)'s for (\\d+(,\\d{1,2})?)"), BuyNItemsOfSKUForFixedPrice.class);
-        promotionMap.put(Pattern.compile("(\\w) & (\\w) for (\\d+(,\\d{1,2})?)"), BuyTwoSKUItemsForFixedPrice.class);
+        PROMOTION_MAP.put(Pattern.compile("(\\d) of (\\w)'s for (\\d+(,\\d{1,2})?)"), BuyNItemsOfSKUForFixedPrice.class);
+        PROMOTION_MAP.put(Pattern.compile("(\\w) & (\\w) for (\\d+(,\\d{1,2})?)"), BuyTwoSKUItemsForFixedPrice.class);
     }
 
     private final ProductStore productStore;
@@ -49,13 +49,14 @@ public class CartCheckoutMain {
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        CartCheckoutMain cartCheckoutMain = new CartCheckoutMain();
-        cartCheckoutMain.readProducts(scanner);
-        cartCheckoutMain.readPromotionOffer(scanner);
-        Cart cart = new Cart();
-        cartCheckoutMain.readItems(cart, scanner);
-        System.out.println("Totals : " + cartCheckoutMain.getTotals(cart));
+        try (Scanner scanner = new Scanner(System.in)) {
+            CartCheckoutMain cartCheckoutMain = new CartCheckoutMain();
+            cartCheckoutMain.readProducts(scanner);
+            cartCheckoutMain.readPromotionOffer(scanner);
+            Cart cart = new Cart();
+            cartCheckoutMain.readItems(cart, scanner);
+            System.out.println("Totals : " + cartCheckoutMain.getTotals(cart));
+        }
     }
 
     public BigDecimal getTotals(Cart cart) {
@@ -69,7 +70,7 @@ public class CartCheckoutMain {
         while (numberOfItems > 0) {
             System.out.println("Enter the item as quantity*item For Example 5*A");
             String scenario = scanner.nextLine();
-            Matcher matcher = ITEM_INPUT_PATTERN.matcher(scenario);
+            Matcher matcher = ITEM_PATTERN.matcher(scenario);
             while (matcher.find()) {
                 int quantity = Integer.parseInt(matcher.group(1));
                 Character sku = matcher.group(2).charAt(0);
@@ -88,7 +89,7 @@ public class CartCheckoutMain {
                     "3 of A's for 130 or C & D for 30");
 
             String promotionOffer = scanner.nextLine();
-            Map.Entry<Pattern, Class<? extends PromotionOffer>> matchEntry = promotionMap.entrySet().stream()
+            Map.Entry<Pattern, Class<? extends PromotionOffer>> matchEntry = PROMOTION_MAP.entrySet().stream()
                     .filter(entry -> promotionOffer.matches(entry.getKey().pattern()))
                     .findFirst().orElse(null);
 

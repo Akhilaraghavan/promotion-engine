@@ -3,7 +3,7 @@ package com.aragh.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Item {
+public final class Item {
 
     /**
      *  Stock keeping unit id of the item is a single character
@@ -79,10 +79,14 @@ public class Item {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
+    public boolean equals(Object otherItem) {
+        if (this == otherItem) {
+            return true;
+        }
+        if (otherItem == null || getClass() != otherItem.getClass()) {
+            return false;
+        }
+        Item item = (Item) otherItem;
         return skuId.equals(item.skuId);
     }
 

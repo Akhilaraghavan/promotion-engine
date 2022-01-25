@@ -36,9 +36,4 @@ public interface PromotionOffer {
      * @return  Returns unique Id of this promotion
      */
     int getId();
-
-    default Item getItem(Character skuId, PromotionSubject subject) {
-        return subject.getItem(skuId)
-                .orElseThrow(() -> new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + subject));
-    }
 }

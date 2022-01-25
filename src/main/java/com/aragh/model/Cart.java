@@ -1,6 +1,7 @@
 package com.aragh.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Cart containing the items different products.
@@ -19,8 +20,8 @@ public class Cart {
      */
     public void add(Item item) {
         if (items.contains(item)) {
-            int index = items.indexOf(item);
-            items.get(index).updateQuantity(item.getQuantity());
+            Item existingItem =items.get(items.indexOf(item));
+            existingItem.updateQuantity(item.getQuantity());
             return;
         }
         items.add(item);

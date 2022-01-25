@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Product represents an SKU with its price
  */
-public class Product {
+public final class Product {
     /**
      * Stock Keeping Unit of the product is a single character
      */

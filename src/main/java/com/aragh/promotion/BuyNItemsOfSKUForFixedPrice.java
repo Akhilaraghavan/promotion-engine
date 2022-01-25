@@ -1,13 +1,13 @@
 package com.aragh.promotion;
 
 import com.aragh.model.Item;
+import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.promotion.model.PromotionSubject;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
 
@@ -42,7 +42,8 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
     @Override
     public void apply(PromotionSubject subject) {
 
-        Item skuIdItem = getItem(skuId, subject);
+        Item skuIdItem = subject.getItem(skuId)
+                .orElseThrow(() -> new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + subject));
         Integer itemQuantity = skuIdItem.getQuantity();
 
         if (itemQuantity < promotionQuantity) {
