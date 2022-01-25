@@ -8,7 +8,7 @@ public class Item {
     private final String skuId;
     private Integer quantity;
     private BigDecimal itemPrice;
-    private BigDecimal totalPriceAfterPromotions;
+    private BigDecimal totalPriceAfterPromotion;
     private boolean isPromotionApplied;
 
     private Item(String skuId, Integer quantity, BigDecimal itemPrice) {
@@ -53,12 +53,12 @@ public class Item {
         return itemPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
-    public BigDecimal getTotalPriceAfterPromotions() {
-        return isPromotionApplied ? totalPriceAfterPromotions : getTotalPrice();
+    public BigDecimal getTotalPriceAfterPromotion() {
+        return isPromotionApplied ? totalPriceAfterPromotion : getTotalPrice();
     }
 
-    public void setTotalPriceAfterPromotions(BigDecimal totalPriceAfterPromotions) {
-        this.totalPriceAfterPromotions = totalPriceAfterPromotions;
+    public void setTotalPriceAfterPromotion(BigDecimal totalPriceAfterPromotion) {
+        this.totalPriceAfterPromotion = totalPriceAfterPromotion;
     }
 
     @Override

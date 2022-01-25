@@ -40,8 +40,8 @@ public class SimplePricingCalculatorTest {
         cart.add(itemB);
         cart.add(Item.of("C", 1, BigDecimal.valueOf(20)));
 
-        when(itemA.getTotalPriceAfterPromotions()).thenReturn(BigDecimal.valueOf(130));
-        when(itemB.getTotalPriceAfterPromotions()).thenReturn(BigDecimal.valueOf(100));
+        when(itemA.getTotalPriceAfterPromotion()).thenReturn(BigDecimal.valueOf(130));
+        when(itemB.getTotalPriceAfterPromotion()).thenReturn(BigDecimal.valueOf(100));
 
         BigDecimal totals = simplePricingCalculator.getTotals(cart);
         assertEquals(BigDecimal.valueOf(250), totals);

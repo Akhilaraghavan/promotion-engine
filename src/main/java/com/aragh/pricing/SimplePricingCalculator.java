@@ -10,8 +10,8 @@ public class SimplePricingCalculator implements PricingCalculator {
     @Override
     public BigDecimal getTotals(Cart cart) {
         return cart.getItems().
-                stream().
-                map(Item::getTotalPriceAfterPromotions)
+                stream()
+                .map(Item::getTotalPriceAfterPromotion)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
