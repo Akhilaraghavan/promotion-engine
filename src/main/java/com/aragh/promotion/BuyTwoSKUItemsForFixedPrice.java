@@ -27,26 +27,12 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
         this.id = skuId1.hashCode() + skuId2.hashCode();
     }
 
-    @Override
-    public List<Character> getPromotionSKUIds() {
-        return Arrays.asList(skuId1, skuId2);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-
+    /**
+     * Apply promotion for the one of the SKU. If there is remaining quantity,
+     * the normal item price is applied on those and the total price
+     * is calculated.
+     * @param subject PromotionSubject with a list of Items {@link Item}
+     */
     @Override
     public void apply(PromotionSubject subject) {
 
@@ -71,6 +57,26 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
         final BigDecimal skuId2ItemTotals = promotionAppliedPrice.add(skuId2ItemPrice.multiply(skuId2ItemsRemainingAfterPromotion));
         skuId2Item.setTotalPriceAfterPromotion(skuId2ItemTotals);
         skuId2Item.promotionApplied();
+    }
+
+    @Override
+    public List<Character> getPromotionSKUIds() {
+        return Arrays.asList(skuId1, skuId2);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override
