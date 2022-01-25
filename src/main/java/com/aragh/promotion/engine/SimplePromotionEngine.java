@@ -1,9 +1,9 @@
 package com.aragh.promotion.engine;
 
 import com.aragh.model.Cart;
-import com.aragh.model.Item;
+import com.aragh.promotion.PromotionOffer;
+import com.aragh.promotion.model.PromotionSubject;
 import com.aragh.promotion.store.PromotionStore;
-import com.aragh.promotion.store.SimplePromotionStore;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,20 +19,32 @@ public class SimplePromotionEngine implements PromotionEngine {
         this.promotionStore = promotionStore;
     }
 
+    /**
+     * Applies the promotion on the cart items.
+     * Only enabled/active promotions are applied on the items.
+     * Promotions applied are mutually exclusive, when one promotion
+     * is applied to the SKU, the other promotions cannot be applied
+     * For example : either 2A = 30 or A=A40%
+     * @param cart cart
+     */
     @Override
     public void applyPromotion(Cart cart) {
         promotionStore.getAllActivePromotions()
             .forEach(promotion -> {
-                    List<String> promotionSKUIds = promotion.getPromotionSKUIds();
-                    List<Item> itemsToApplyPromotion = cart.getItems().stream()
-                            .filter(item -> !item.isPromotionApplied())
-                            .filter(item -> promotionSKUIds.contains(item.getSkuId()))
-                            .collect(Collectors.toList());
-                    try {
-                        promotion.apply(itemsToApplyPromotion);
-                    } catch (ItemPromotionMismatchException e) {
-                        LOGGER.warning(String.format("Promotion %s could not be applied on items %s", promotion, itemsToApplyPromotion));
-                    }
+                PromotionSubject promotionSubject = getSubject(cart, promotion);
+                try {
+                    promotion.apply(promotionSubject);
+                } catch (ItemPromotionMismatchException e) {
+                    LOGGER.warning(String.format("Promotion %s could not be applied on subject %s", promotion, promotionSubject));
+                }
         });
+    }
+
+    private PromotionSubject getSubject(Cart cart, PromotionOffer promotionOffer) {
+        List<String> promotionSKUIds = promotionOffer.getPromotionSKUIds();
+         return new PromotionSubject(cart.getItems().stream()
+                .filter(item -> !item.isPromotionApplied())
+                .filter(item -> promotionSKUIds.contains(item.getSkuId()))
+                .collect(Collectors.toList()));
     }
 }

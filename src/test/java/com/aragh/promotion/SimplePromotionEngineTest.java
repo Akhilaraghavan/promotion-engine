@@ -33,9 +33,9 @@ public class SimplePromotionEngineTest {
     }
 
     private void setupPromotions() {
-        promotionStore.save(new BuyNItemsForFixedPrice("A", 3, BigDecimal.valueOf(130)));
-        promotionStore.save(new BuyNItemsForFixedPrice("B", 2, BigDecimal.valueOf(45)));
-        promotionStore.save(new BuyTwoItemsForFixedPrice("C","D", BigDecimal.valueOf(30)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("A", 3, BigDecimal.valueOf(130)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("B", 2, BigDecimal.valueOf(45)));
+        promotionStore.save(new BuyTwoSKUItemsForFixedPrice("C","D", BigDecimal.valueOf(30)));
     }
 
     private void setupProducts() {
@@ -84,15 +84,15 @@ public class SimplePromotionEngineTest {
 
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(230), itemA.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(230), itemA.getTotalPriceAfterPromotion());
 
         Item itemB = cart.getItems().get(1);
         assertTrue(itemB.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotion());
 
         Item itemC = cart.getItems().get(2);
         assertFalse(itemC.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(20), itemC.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(20), itemC.getTotalPriceAfterPromotion());
     }
 
     /**
@@ -104,7 +104,7 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioB_PromotionAppliedOnAAndB_ApplyOnlyOne() {
         // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsForFixedPrice("A", 2, BigDecimal.valueOf(100)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("A", 2, BigDecimal.valueOf(100)));
 
         Cart cart = new Cart();
         cart.add(Item.of("A", 5, getItemPrice("A")));
@@ -115,15 +115,15 @@ public class SimplePromotionEngineTest {
 
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(250), itemA.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(250), itemA.getTotalPriceAfterPromotion());
 
         Item itemB = cart.getItems().get(1);
         assertTrue(itemB.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotion());
 
         Item itemC = cart.getItems().get(2);
         assertFalse(itemC.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(20), itemC.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(20), itemC.getTotalPriceAfterPromotion());
     }
 
     /**
@@ -145,19 +145,19 @@ public class SimplePromotionEngineTest {
 
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotion());
 
         Item itemB = cart.getItems().get(1);
         assertTrue(itemB.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotion());
 
         Item itemC = cart.getItems().get(2);
         assertTrue(itemC.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotion());
 
         Item itemD = cart.getItems().get(3);
         assertTrue(itemD.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(30), itemD.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(30), itemD.getTotalPriceAfterPromotion());
     }
 
     /**
@@ -170,7 +170,7 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems_WithOneNotApplied() {
         // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsForFixedPrice("C", 2, BigDecimal.valueOf(15)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("C", 2, BigDecimal.valueOf(15)));
 
         Cart cart = new Cart();
         cart.add(Item.of("A", 3, getItemPrice("A")));
@@ -182,19 +182,19 @@ public class SimplePromotionEngineTest {
 
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotion());
 
         Item itemB = cart.getItems().get(1);
         assertTrue(itemB.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotion());
 
         Item itemC = cart.getItems().get(2);
         assertTrue(itemC.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotion());
 
         Item itemD = cart.getItems().get(3);
         assertTrue(itemD.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(30), itemD.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(30), itemD.getTotalPriceAfterPromotion());
     }
 
     /**
@@ -207,7 +207,7 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems_WithRemainingItemsAfterPromotionForD() {
         // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsForFixedPrice("C", 2, BigDecimal.valueOf(15)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("C", 2, BigDecimal.valueOf(15)));
 
         Cart cart = new Cart();
         cart.add(Item.of("A", 3, getItemPrice("A")));
@@ -219,18 +219,18 @@ public class SimplePromotionEngineTest {
 
         Item itemA = cart.getItems().get(0);
         assertTrue(itemA.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(130), itemA.getTotalPriceAfterPromotion());
 
         Item itemB = cart.getItems().get(1);
         assertTrue(itemB.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(120), itemB.getTotalPriceAfterPromotion());
 
         Item itemC = cart.getItems().get(2);
         assertTrue(itemC.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(0), itemC.getTotalPriceAfterPromotion());
 
         Item itemD = cart.getItems().get(3);
         assertTrue(itemD.isPromotionApplied());
-        assertEquals(BigDecimal.valueOf(45), itemD.getTotalPriceAfterPromotions());
+        assertEquals(BigDecimal.valueOf(45), itemD.getTotalPriceAfterPromotion());
     }
 }

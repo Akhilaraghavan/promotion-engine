@@ -1,12 +1,12 @@
 package com.aragh.promotion.store;
 
-import com.aragh.promotion.Promotion;
+import com.aragh.promotion.PromotionOffer;
 
 import java.util.List;
 
 public interface PromotionStore {
 
-    void save(Promotion promotion);
+    void save(PromotionOffer promotionOffer);
 
-    List<Promotion> getAllActivePromotions();
+    List<PromotionOffer> getAllActivePromotions();
 }
