@@ -30,7 +30,7 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
     /**
      * Apply promotion for the one of the SKU. If there is remaining quantity,
      * the normal item price is applied on those and the total price
-     * is calculated.
+     * is calculated. For a given SKU its either 2A = 30 or A=A40%
      * @param subject PromotionSubject with a list of Items {@link Item}
      */
     @Override
@@ -41,20 +41,19 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
 
         //Get quantity applicable for promotion
         int applicableForPromotion = Math.min(skuId1Item.getQuantity(), skuId2Item.getQuantity());
-        BigDecimal promotionAppliedPrice = BigDecimal.valueOf(0);
-        promotionAppliedPrice = promotionAppliedPrice.add(promotionPrice.multiply(BigDecimal.valueOf(applicableForPromotion)));
+        BigDecimal promotionAppliedPrice = promotionPrice.multiply(BigDecimal.valueOf(applicableForPromotion));
 
-        //Left over from skuId1Item is priced as is for the remaining
-        final BigDecimal skuId1ItemsRemainingAfterPromotion = BigDecimal.valueOf(skuId1Item.getQuantity() - applicableForPromotion);
-        final BigDecimal skuId1ItemPrice = skuId1Item.getItemPrice();
-        final BigDecimal skuId1ItemTotals = skuId1ItemPrice.multiply(skuId1ItemsRemainingAfterPromotion);
+        //Remaining from skuId1Item is priced as is for the remaining, remaining items is greater or equal to promotion applied items
+        final int skuId1ItemsRemainingAfterPromotion = skuId1Item.getQuantity() - applicableForPromotion;
+        final BigDecimal skuId1ItemTotals = skuId1Item.getItemPrice()
+                .multiply(BigDecimal.valueOf(skuId1ItemsRemainingAfterPromotion));
         skuId1Item.setTotalPriceAfterPromotion(skuId1ItemTotals);
         skuId1Item.promotionApplied();
 
-        //Left over from skuId2Item added to promotional price
-        final BigDecimal skuId2ItemsRemainingAfterPromotion = BigDecimal.valueOf(skuId2Item.getQuantity() - applicableForPromotion);
-        final BigDecimal skuId2ItemPrice = skuId2Item.getItemPrice();
-        final BigDecimal skuId2ItemTotals = promotionAppliedPrice.add(skuId2ItemPrice.multiply(skuId2ItemsRemainingAfterPromotion));
+        //Remaining from skuId2Item added to promotionAppliedPrice, remaining items is greater or equal to promotion applied items
+        final int skuId2ItemsRemainingAfterPromotion = skuId2Item.getQuantity() - applicableForPromotion;
+        final BigDecimal skuId2ItemTotals = promotionAppliedPrice.add(skuId2Item.getItemPrice()
+                .multiply(BigDecimal.valueOf(skuId2ItemsRemainingAfterPromotion)));
         skuId2Item.setTotalPriceAfterPromotion(skuId2ItemTotals);
         skuId2Item.promotionApplied();
     }

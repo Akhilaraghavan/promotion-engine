@@ -18,4 +18,11 @@ public class PromotionSubject {
                 .filter(item -> skuId.equals(item.getSkuId()))
                 .findFirst();
     }
+
+    @Override
+    public String toString() {
+        return "PromotionSubject{" +
+                "items=" + items +
+                '}';
+    }
 }

@@ -46,18 +46,17 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
         Integer itemQuantity = skuIdItem.getQuantity();
 
         if (itemQuantity < promotionQuantity) {
-            LOGGER.fine("Promotion is not applied as the item quantity is less than promotionQuantity");
+            LOGGER.fine("Promotion is not applied as the item quantity is less than promotionQuantity for " + skuIdItem);
             return;
         }
 
-        BigDecimal finalPrice = BigDecimal.valueOf(0);
         final BigDecimal numberOfItemsLeftWithNoPromotion = BigDecimal.valueOf(itemQuantity % promotionQuantity);
         final BigDecimal applicableForPromotion =  BigDecimal.valueOf(itemQuantity/promotionQuantity);
 
-        finalPrice = finalPrice.add(promotionPrice.multiply(applicableForPromotion));
-        finalPrice = finalPrice.add(skuIdItem.getItemPrice().multiply(numberOfItemsLeftWithNoPromotion));
+        BigDecimal finalPriceAfterPromotion = promotionPrice.multiply(applicableForPromotion)
+                .add(skuIdItem.getItemPrice().multiply(numberOfItemsLeftWithNoPromotion));
 
-        skuIdItem.setTotalPriceAfterPromotion(finalPrice);
+        skuIdItem.setTotalPriceAfterPromotion(finalPriceAfterPromotion);
         skuIdItem.promotionApplied();
     }
 
