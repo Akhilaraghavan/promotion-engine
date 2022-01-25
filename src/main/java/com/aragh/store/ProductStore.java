@@ -9,7 +9,5 @@ public interface ProductStore {
 
     void saveProduct(Product product);
 
-    List<Product> getProducts();
-
     Optional<Product> findBySkuId(Character skuId);
 }

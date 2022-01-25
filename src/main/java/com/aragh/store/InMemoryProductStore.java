@@ -2,8 +2,9 @@ package com.aragh.store;
 
 import com.aragh.model.Product;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class InMemoryProductStore implements ProductStore {
 
@@ -16,11 +17,6 @@ public class InMemoryProductStore implements ProductStore {
     @Override
     public void saveProduct(Product product) {
         map.put(product.getSkuId(), product);
-    }
-
-    @Override
-    public List<Product> getProducts() {
-        return map.values().stream().collect(Collectors.toUnmodifiableList());
     }
 
     @Override
