@@ -37,11 +37,11 @@ Once the project is built, navigate to the target directory and execute the jar
 
 Provide the input as shown below. The promotions can be provided in natural language  
 
-The below cart scenario is where the total is 280
-3*A 130  
-5*B 45+45+30  
-1*C  
-1*D 30  
+The below cart scenario is where the total is 280  
+3 * A     130  
+5 * B     45+45+30  
+1 * C     -  
+1 * D     30  
 ````
 Enter the unit price for each SKU as space delimited, and each product as comma separated. For Example : A 50,B 30,C 20  
 A 50,B 30,C 20,D 15  
