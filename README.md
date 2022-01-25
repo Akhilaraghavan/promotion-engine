@@ -1,14 +1,18 @@
 # promotion-engine
 A simple in-memory promotion engine for cart checkout process
 The application core includes  
-- **CartCheckoutService** : The cart checkout service has an API to calculate the total price of the cart  
-                        The total price is calculated after applying any applicable promotions. 
-                        See test [SimpleCartCheckoutServiceTest](src/test/java/com/aragh/service/SimpleCartCheckoutServiceTest.java)
-- **PromotionEngine** : Main responsibility of the promotion engine is to check if the promotion   
+- **[CartCheckoutService](src/main/java/com/aragh/service/SimpleCartCheckoutService.java)** : The cart checkout service has an API to calculate the total price of the cart  
+The total price is calculated after applying any applicable promotions. 
+See test [SimpleCartCheckoutServiceTest](src/test/java/com/aragh/service/SimpleCartCheckoutServiceTest.java)
+- **[PromotionEngine](src/main/java/com/aragh/promotion/engine/SimplePromotionEngine.java)** : Main responsibility of the promotion engine is to check if the promotion   
 is active and whether the promotion can be applied on the items. The SimplePromotionEngine also filters 
-out the items which have been applied promotion
-- **BuyNItemsOfSKUForFixedPrice** : The promotion offer that is applied on the SKU for the N Items.
-- **BuyTwoSKUItemsForFixedPrice** : Promotion offer that is applied for two SKUs in the cart.  
+out the items which have been applied promotion.
+See test [SimplePromotionEngineTest](src/test/java/com/aragh/promotion/SimplePromotionEngineTest.java)
+- **[BuyNItemsOfSKUForFixedPrice](src/main/java/com/aragh/promotion/BuyNItemsOfSKUForFixedPrice.java)** : The promotion offer that is applied on the SKU for the N Items.
+See test [BuyNItemsOfSKUForFixedPriceTest](src/test/java/com/aragh/promotion/BuyNItemsOfSKUForFixedPriceTest.java)
+- **[BuyTwoSKUItemsForFixedPrice](src/main/java/com/aragh/promotion/BuyTwoSKUItemsForFixedPrice.java)** : Promotion offer that is applied for two SKUs in the cart.  
+See test [BuyTwoSKUItemsForFixedPrice](src/test/java/com/aragh/promotion/BuyTwoSKUItemsForFixedPriceTest.java)  
+
 
 **Note and Considerations**:  
 - More promotion types can be added by implementing the PromotionOffer.  
@@ -16,6 +20,10 @@ out the items which have been applied promotion
 is applied on one sku then others are ignored. case 2 => either 2A = 30 or A=A40%
 - The problem statement mentions that the cart has a list of single character sku, the Item
 class has an skuId of type Character. However, this could be extended to use String/Generic type <T>.
+- Basic validation exists for quantity, skuId and price and while creating and applying the promotion.
+- Logging and Exception handling is basic and there is scope for improvement
+- There is no Dependency injection used in the tests or the Main. This is also a good consideration
+for improvement
 
 ### Usage
 This is a maven project and comes with maven wrapper  
