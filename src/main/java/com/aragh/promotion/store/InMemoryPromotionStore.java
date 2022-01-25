@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SimplePromotionStore implements PromotionStore {
+public class InMemoryPromotionStore implements PromotionStore {
 
     private final Map<Integer, PromotionOffer> promotions;
 
-    public SimplePromotionStore() {
+    public InMemoryPromotionStore() {
         promotions = new LinkedHashMap<>();
     }
 

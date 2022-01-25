@@ -11,5 +11,5 @@ public interface ProductStore {
 
     List<Product> getProducts();
 
-    Optional<Product> findBySkuId(String skuId);
+    Optional<Product> findBySkuId(Character skuId);
 }

@@ -13,7 +13,7 @@ public class PromotionSubject {
         this.items = items;
     }
 
-    public Optional<Item> getItem(String skuId) {
+    public Optional<Item> getItem(Character skuId) {
         return items.stream()
                 .filter(item -> skuId.equals(item.getSkuId()))
                 .findFirst();

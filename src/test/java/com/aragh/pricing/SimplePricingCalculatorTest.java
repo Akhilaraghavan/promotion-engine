@@ -23,9 +23,9 @@ public class SimplePricingCalculatorTest {
     @Test
     public void testCartTotalsBeforePromotion() {
         Cart cart = new Cart();
-        cart.add(Item.of("A", 1, BigDecimal.valueOf(50)));
-        cart.add(Item.of("B", 1, BigDecimal.valueOf(30)));
-        cart.add(Item.of("C", 1, BigDecimal.valueOf(20)));
+        cart.add(Item.of('A', 1, BigDecimal.valueOf(50)));
+        cart.add(Item.of('B', 1, BigDecimal.valueOf(30)));
+        cart.add(Item.of('C', 1, BigDecimal.valueOf(20)));
         BigDecimal totals = simplePricingCalculator.getTotals(cart);
         assertEquals(BigDecimal.valueOf(100), totals);
 
@@ -38,7 +38,7 @@ public class SimplePricingCalculatorTest {
         cart.add(itemA);
         Item itemB = Mockito.mock(Item.class);
         cart.add(itemB);
-        cart.add(Item.of("C", 1, BigDecimal.valueOf(20)));
+        cart.add(Item.of('C', 1, BigDecimal.valueOf(20)));
 
         when(itemA.getTotalPriceAfterPromotion()).thenReturn(BigDecimal.valueOf(130));
         when(itemB.getTotalPriceAfterPromotion()).thenReturn(BigDecimal.valueOf(100));

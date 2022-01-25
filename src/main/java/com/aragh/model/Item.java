@@ -5,23 +5,42 @@ import java.util.Objects;
 
 public class Item {
 
-    private final String skuId;
+    /**
+     *  Stock keeping unit id of the item is a single character
+     */
+    private final Character skuId;
+
+    /**
+     *  Item Price
+     */
+    private final BigDecimal itemPrice;
+
+    /**
+     *  The number of same item in the cart
+     */
     private Integer quantity;
-    private BigDecimal itemPrice;
+
+    /**
+     *  Total Price after the promotion is applied
+     */
     private BigDecimal totalPriceAfterPromotion;
+
+    /**
+     * If promotion is applied on this item.
+     */
     private boolean isPromotionApplied;
 
-    private Item(String skuId, Integer quantity, BigDecimal itemPrice) {
+    private Item(Character skuId, Integer quantity, BigDecimal itemPrice) {
         this.skuId = Objects.requireNonNull(skuId, "Stock Keeping unit Id is not set");
         this.quantity = Objects.requireNonNull(quantity, "Quantity is not set");
         this.itemPrice = Objects.requireNonNull(itemPrice, "Item price is not set");
     }
 
-    public static Item of(String skuId, Integer quantity, BigDecimal itemPrice) {
+    public static Item of(Character skuId, Integer quantity, BigDecimal itemPrice) {
         return new Item(skuId, quantity, itemPrice);
     }
 
-    public String getSkuId() {
+    public Character getSkuId() {
         return skuId;
     }
 
@@ -43,10 +62,6 @@ public class Item {
 
     public BigDecimal getItemPrice() {
         return itemPrice;
-    }
-
-    public void setItemPrice(BigDecimal itemPrice) {
-        this.itemPrice = itemPrice;
     }
 
     public BigDecimal getTotalPrice() {

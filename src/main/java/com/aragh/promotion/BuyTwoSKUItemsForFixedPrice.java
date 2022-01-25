@@ -10,13 +10,13 @@ import java.util.Objects;
 
 public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
 
-    private final String skuId1;
-    private final String skuId2;
+    private final Character skuId1;
+    private final Character skuId2;
     private final BigDecimal promotionPrice;
     private boolean enabled;
     private final int id;
 
-    public BuyTwoSKUItemsForFixedPrice(String skuId1, String skuId2, BigDecimal promotionPrice) {
+    public BuyTwoSKUItemsForFixedPrice(Character skuId1, Character skuId2, BigDecimal promotionPrice) {
         this.skuId1 = Objects.requireNonNull(skuId1, "SKU1 id is not provided");
         this.skuId2 = Objects.requireNonNull(skuId2, "SKU2 id is not provided");
         this.promotionPrice = Objects.requireNonNull(promotionPrice, "Price is not set");
@@ -28,7 +28,7 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
     }
 
     @Override
-    public List<String> getPromotionSKUIds() {
+    public List<Character> getPromotionSKUIds() {
         return Arrays.asList(skuId1, skuId2);
     }
 
@@ -50,8 +50,8 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
     @Override
     public void apply(PromotionSubject subject) {
 
-        Item skuId1Item = getSkuId1Item(skuId1, subject);
-        Item skuId2Item = getSkuId1Item(skuId2, subject);
+        Item skuId1Item = getItem(skuId1, subject);
+        Item skuId2Item = getItem(skuId2, subject);
 
         //Get quantity applicable for promotion
         int applicableForPromotion = Math.min(skuId1Item.getQuantity(), skuId2Item.getQuantity());

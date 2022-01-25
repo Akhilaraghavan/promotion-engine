@@ -6,19 +6,26 @@ import java.math.BigDecimal;
  * Product represents an SKU with its price
  */
 public class Product {
-    private final String skuId;
+    /**
+     * Stock Keeping Unit of the product is a single character
+     */
+    private final Character skuId;
+
+    /**
+     * Unit price
+     */
     private final BigDecimal unitPrice;
 
-    private Product(String skuId, BigDecimal unitPrice) {
+    private Product(Character skuId, BigDecimal unitPrice) {
         this.skuId = skuId;
         this.unitPrice = unitPrice;
     }
 
-    public static Product of(String skuId, BigDecimal unitPrice) {
+    public static Product of(Character skuId, BigDecimal unitPrice) {
         return new Product(skuId, unitPrice);
     }
 
-    public String getSkuId() {
+    public Character getSkuId() {
         return skuId;
     }
 

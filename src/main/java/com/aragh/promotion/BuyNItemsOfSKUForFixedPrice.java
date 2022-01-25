@@ -13,12 +13,12 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
     private static final Logger LOGGER = Logger.getLogger(BuyNItemsOfSKUForFixedPrice.class.getName());
 
     private final int id;
-    private final String skuId;
+    private final Character skuId;
     private final int promotionQuantity;
     private final BigDecimal promotionPrice;
     private boolean enabled;
 
-    public BuyNItemsOfSKUForFixedPrice(String skuId, int promotionQuantity, BigDecimal promotionPrice) {
+    public BuyNItemsOfSKUForFixedPrice(Character skuId, int promotionQuantity, BigDecimal promotionPrice) {
         this.id = skuId.hashCode();
         this.promotionQuantity = promotionQuantity;
         this.skuId = Objects.requireNonNull(skuId, "Stock keeping unit is not set");
@@ -33,7 +33,7 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
     }
 
     @Override
-    public List<String> getPromotionSKUIds() {
+    public List<Character> getPromotionSKUIds() {
         return List.of(skuId);
     }
 
@@ -55,7 +55,7 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
     @Override
     public void apply(PromotionSubject subject) {
 
-        Item skuIdItem = getSkuId1Item(skuId, subject);
+        Item skuIdItem = getItem(skuId, subject);
         Integer itemQuantity = skuIdItem.getQuantity();
 
         if (itemQuantity < promotionQuantity) {

@@ -6,9 +6,9 @@ import com.aragh.model.Product;
 import com.aragh.promotion.engine.PromotionEngine;
 import com.aragh.promotion.engine.SimplePromotionEngine;
 import com.aragh.promotion.store.PromotionStore;
-import com.aragh.promotion.store.SimplePromotionStore;
+import com.aragh.promotion.store.InMemoryPromotionStore;
 import com.aragh.store.ProductStore;
-import com.aragh.store.SimpleInMemoryProductStore;
+import com.aragh.store.InMemoryProductStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,30 +25,31 @@ public class SimplePromotionEngineTest {
 
     @BeforeEach
     public void beforeEach() {
-        this.productStore = new SimpleInMemoryProductStore();
-        this.promotionStore = new SimplePromotionStore();
+        this.productStore = new InMemoryProductStore();
+        this.promotionStore = new InMemoryPromotionStore();
         this.promotionEngine = new SimplePromotionEngine(promotionStore);
         setupProducts();
         setupPromotions();
     }
 
     private void setupPromotions() {
-        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("A", 3, BigDecimal.valueOf(130)));
-        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("B", 2, BigDecimal.valueOf(45)));
-        promotionStore.save(new BuyTwoSKUItemsForFixedPrice("C","D", BigDecimal.valueOf(30)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice('A', 3, BigDecimal.valueOf(130)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice('B', 2, BigDecimal.valueOf(45)));
+        promotionStore.save(new BuyTwoSKUItemsForFixedPrice('C','D', BigDecimal.valueOf(30)));
     }
 
     private void setupProducts() {
-        productStore.saveProduct(Product.of("A", BigDecimal.valueOf(50)));
-        productStore.saveProduct(Product.of("B", BigDecimal.valueOf(30)));
-        productStore.saveProduct(Product.of("C", BigDecimal.valueOf(20)));
-        productStore.saveProduct(Product.of("D", BigDecimal.valueOf(15)));
+        productStore.saveProduct(Product.of('A', BigDecimal.valueOf(50)));
+        productStore.saveProduct(Product.of('B', BigDecimal.valueOf(30)));
+        productStore.saveProduct(Product.of('C', BigDecimal.valueOf(20)));
+        productStore.saveProduct(Product.of('D', BigDecimal.valueOf(15)));
     }
 
 
-    private BigDecimal getItemPrice(String skuId) {
+    private BigDecimal getItemPrice(Character skuId) {
         return productStore.findBySkuId(skuId).orElseThrow().getUnitPrice();
     }
+
     /**
      *
      * 1*A 50
@@ -58,9 +59,9 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioA_NoPromotionsApplied() {
         Cart cart = new Cart();
-        cart.add(Item.of("A", 1, getItemPrice("A")));
-        cart.add(Item.of("B", 1, getItemPrice("B")));
-        cart.add(Item.of("C", 1, getItemPrice("C")));
+        cart.add(Item.of('A', 1, getItemPrice('A')));
+        cart.add(Item.of('B', 1, getItemPrice('B')));
+        cart.add(Item.of('C', 1, getItemPrice('C')));
 
         promotionEngine.applyPromotion(cart);
 
@@ -76,9 +77,9 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioB_PromotionAppliedOnAAndB() {
         Cart cart = new Cart();
-        cart.add(Item.of("A", 5, getItemPrice("A")));
-        cart.add(Item.of("B", 5, getItemPrice("B")));
-        cart.add(Item.of("C", 1, getItemPrice("C")));
+        cart.add(Item.of('A', 5, getItemPrice('A')));
+        cart.add(Item.of('B', 5, getItemPrice('B')));
+        cart.add(Item.of('C', 1, getItemPrice('C')));
 
         promotionEngine.applyPromotion(cart);
 
@@ -104,12 +105,12 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioB_PromotionAppliedOnAAndB_ApplyOnlyOne() {
         // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("A", 2, BigDecimal.valueOf(100)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice('A', 2, BigDecimal.valueOf(100)));
 
         Cart cart = new Cart();
-        cart.add(Item.of("A", 5, getItemPrice("A")));
-        cart.add(Item.of("B", 5, getItemPrice("B")));
-        cart.add(Item.of("C", 1, getItemPrice("C")));
+        cart.add(Item.of('A', 5, getItemPrice('A')));
+        cart.add(Item.of('B', 5, getItemPrice('B')));
+        cart.add(Item.of('C', 1, getItemPrice('C')));
 
         promotionEngine.applyPromotion(cart);
 
@@ -136,10 +137,10 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems() {
         Cart cart = new Cart();
-        cart.add(Item.of("A", 3, getItemPrice("A")));
-        cart.add(Item.of("B", 5, getItemPrice("B")));
-        cart.add(Item.of("C", 1, getItemPrice("C")));
-        cart.add(Item.of("D", 1, getItemPrice("D")));
+        cart.add(Item.of('A', 3, getItemPrice('A')));
+        cart.add(Item.of('B', 5, getItemPrice('B')));
+        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of('D', 1, getItemPrice('D')));
 
         promotionEngine.applyPromotion(cart);
 
@@ -170,13 +171,13 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems_WithOneNotApplied() {
         // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("C", 2, BigDecimal.valueOf(15)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice('C', 2, BigDecimal.valueOf(15)));
 
         Cart cart = new Cart();
-        cart.add(Item.of("A", 3, getItemPrice("A")));
-        cart.add(Item.of("B", 5, getItemPrice("B")));
-        cart.add(Item.of("C", 1, getItemPrice("C")));
-        cart.add(Item.of("D", 1, getItemPrice("D")));
+        cart.add(Item.of('A', 3, getItemPrice('A')));
+        cart.add(Item.of('B', 5, getItemPrice('B')));
+        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of('D', 1, getItemPrice('D')));
 
         promotionEngine.applyPromotion(cart);
 
@@ -207,13 +208,13 @@ public class SimplePromotionEngineTest {
     @Test
     public void testScenarioC_PromotionAppliedOnAllItems_WithRemainingItemsAfterPromotionForD() {
         // This promotion replaces the existing BuyNItemsForFixedPrice for A
-        promotionStore.save(new BuyNItemsOfSKUForFixedPrice("C", 2, BigDecimal.valueOf(15)));
+        promotionStore.save(new BuyNItemsOfSKUForFixedPrice('C', 2, BigDecimal.valueOf(15)));
 
         Cart cart = new Cart();
-        cart.add(Item.of("A", 3, getItemPrice("A")));
-        cart.add(Item.of("B", 5, getItemPrice("B")));
-        cart.add(Item.of("C", 1, getItemPrice("C")));
-        cart.add(Item.of("D", 2, getItemPrice("D")));
+        cart.add(Item.of('A', 3, getItemPrice('A')));
+        cart.add(Item.of('B', 5, getItemPrice('B')));
+        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of('D', 2, getItemPrice('D')));
 
         promotionEngine.applyPromotion(cart);
 

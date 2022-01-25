@@ -5,11 +5,11 @@ import com.aragh.model.Product;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SimpleInMemoryProductStore implements ProductStore {
+public class InMemoryProductStore implements ProductStore {
 
-    private final Map<String, Product> map;
+    private final Map<Character, Product> map;
 
-    public SimpleInMemoryProductStore() {
+    public InMemoryProductStore() {
         this.map = new LinkedHashMap<>();
     }
 
@@ -24,7 +24,7 @@ public class SimpleInMemoryProductStore implements ProductStore {
     }
 
     @Override
-    public Optional<Product> findBySkuId(String skuId) {
+    public Optional<Product> findBySkuId(Character skuId) {
         return Optional.ofNullable(map.get(skuId));
     }
 }

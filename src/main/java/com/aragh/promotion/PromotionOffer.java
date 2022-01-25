@@ -12,7 +12,7 @@ public interface PromotionOffer {
      * determine whether the promotion can be applied on items.
      * @return  list of SKUIds
      */
-    List<String> getPromotionSKUIds();
+    List<Character> getPromotionSKUIds();
 
     /**
      * Apply the promotion on the subject.
@@ -37,7 +37,7 @@ public interface PromotionOffer {
      */
     int getId();
 
-    default Item getSkuId1Item(String skuId, PromotionSubject subject) {
+    default Item getItem(Character skuId, PromotionSubject subject) {
         return subject.getItem(skuId)
                 .orElseThrow(() -> new ItemPromotionMismatchException("Promotion " + this + " cannot be applied on item " + subject));
     }

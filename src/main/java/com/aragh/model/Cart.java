@@ -12,6 +12,11 @@ public class Cart {
         items = new ArrayList<>();
     }
 
+    /**
+     * Add to cart if the item does not exist
+     * if item exists, update quantity.
+     * @param item item
+     */
     public void add(Item item) {
         if (items.contains(item)) {
             int index = items.indexOf(item);

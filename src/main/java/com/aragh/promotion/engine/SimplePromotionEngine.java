@@ -41,7 +41,7 @@ public class SimplePromotionEngine implements PromotionEngine {
     }
 
     private PromotionSubject getSubject(Cart cart, PromotionOffer promotionOffer) {
-        List<String> promotionSKUIds = promotionOffer.getPromotionSKUIds();
+        List<Character> promotionSKUIds = promotionOffer.getPromotionSKUIds();
          return new PromotionSubject(cart.getItems().stream()
                 .filter(item -> !item.isPromotionApplied())
                 .filter(item -> promotionSKUIds.contains(item.getSkuId()))
