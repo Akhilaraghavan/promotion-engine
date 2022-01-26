@@ -1,7 +1,6 @@
 package com.aragh.promotion;
 
 import com.aragh.model.Item;
-import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.promotion.model.PromotionSubject;
 
 import java.util.List;
