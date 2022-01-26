@@ -46,7 +46,7 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
         int applicableForPromotion = Math.min(skuId1Item.getQuantity(), skuId2Item.getQuantity());
         BigDecimal promotionAppliedPrice = promotionPrice.multiply(BigDecimal.valueOf(applicableForPromotion));
 
-        //Remaining from skuId1Item is priced as is for the remaining, remaining items is greater or equal to promotion applied items
+        //Remaining from skuId1Item is priced on the unit price, remaining items is greater or equal to promotion applied items
         final int skuId1ItemsRemainingAfterPromotion = skuId1Item.getQuantity() - applicableForPromotion;
         final BigDecimal skuId1ItemTotals = skuId1Item.getItemPrice()
                 .multiply(BigDecimal.valueOf(skuId1ItemsRemainingAfterPromotion));

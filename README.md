@@ -19,10 +19,10 @@ See test [BuyTwoSKUItemsForFixedPrice](src/test/java/com/aragh/promotion/BuyTwoS
 - The promotions are mutually exclusive and its assumed that if one promotion 
 is applied on one sku then others are ignored. case 2 => either 2A = 30 or A=A40%
 - The problem statement mentions that the cart has a list of single character sku, the Item
-class has an skuId of type Character. However, this could be extended to use String/Generic type <T>.
+class has an skuId of type Character. However, this could be updated to use String/Generic type <T>.
 - Basic validation exists for quantity, skuId and price and while creating and applying the promotion.
 - Logging and Exception handling is basic and there is scope for improvement
-- There is no Dependency injection used in the tests or the Main. This is also a good consideration
+- There is no Dependency injection used in the tests or the CartCheckoutMain. This is also a good consideration
 for improvement
 - PMD run locally and the code does not have cyclomatic complexity. I have not included
 the maven maven-pmd-plugin as the build time can increase due to dependencies download.
@@ -44,7 +44,7 @@ Once the project is built, navigate to the target directory and execute the jar
 
 #### Sample input for commandLine run
 
-Provide the input as shown below. The promotions can be provided in natural language  
+Provide the input as shown below. The promotions can be provided as text. See example below.  
 
 The below cart scenario is where the total is 280  
 3 * A     130  
