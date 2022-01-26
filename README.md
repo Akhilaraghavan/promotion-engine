@@ -45,6 +45,7 @@ Once the project is built, navigate to the target directory and execute the jar
 #### Sample input for commandLine run
 
 Provide the input as shown below. The promotions can be provided as text. See example below.  
+Please note that the input is case-sensitive. 
 
 The below cart scenario is where the total is 280  
 3 * A     130  
