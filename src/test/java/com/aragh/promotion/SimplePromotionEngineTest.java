@@ -57,7 +57,7 @@ public class SimplePromotionEngineTest {
      * 1*C 20
      */
     @Test
-    public void testScenarioA_NoPromotionsApplied() {
+    public void testApplyPromotionScenarioA_NoPromotionsApplied() {
         //Assign
         Cart cart = new Cart();
         cart.add(Item.of('A', 1, getItemPrice('A')));
@@ -78,7 +78,7 @@ public class SimplePromotionEngineTest {
      * 1*C 20
      */
     @Test
-    public void testScenarioB_PromotionAppliedOnAAndB() {
+    public void testApplyPromotionScenarioB_PromotionAppliedOnAAndB() {
         //Assign
         Cart cart = new Cart();
         cart.add(Item.of('A', 5, getItemPrice('A')));
@@ -109,7 +109,7 @@ public class SimplePromotionEngineTest {
      * 1*C 20
      */
     @Test
-    public void testScenarioB_PromotionAppliedOnAAndB_ApplyOnlyOne() {
+    public void testApplyPromotionScenarioB_PromotionAppliedOnAAndB_ApplyOnlyOne() {
         // This promotion is not applied, order of insertion is the sort order.
         promotionStore.save(new BuyNItemsOfSKUForFixedPrice('A', 2, BigDecimal.valueOf(100)));
 
@@ -141,7 +141,7 @@ public class SimplePromotionEngineTest {
      * 1*D 30
      */
     @Test
-    public void testScenarioC_PromotionAppliedOnAllItems() {
+    public void testApplyPromotionScenarioC_PromotionAppliedOnAllItems() {
         Cart cart = new Cart();
         cart.add(Item.of('A', 3, getItemPrice('A')));
         cart.add(Item.of('B', 5, getItemPrice('B')));
@@ -178,7 +178,7 @@ public class SimplePromotionEngineTest {
      * the other is ignored.
      */
     @Test
-    public void testScenarioC_PromotionAppliedOnAllItems_WithOneNotApplied() {
+    public void testApplyPromotionScenario_PromotionAppliedOnAllItems_WithOneNotApplied() {
         // This promotion is not applied
         promotionStore.save(new BuyNItemsOfSKUForFixedPrice('C', 2, BigDecimal.valueOf(15)));
 
@@ -218,7 +218,7 @@ public class SimplePromotionEngineTest {
      * 2*D 30 + 15 = 45
      */
     @Test
-    public void testScenarioC_PromotionAppliedOnAllItems_WithRemainingItemsAfterPromotionForD() {
+    public void testApplyPromotionScenario_PromotionAppliedOnAllItems_WithRemainingItemsAfterPromotionForD() {
         Cart cart = new Cart();
         cart.add(Item.of('A', 3, getItemPrice('A')));
         cart.add(Item.of('B', 5, getItemPrice('B')));
@@ -252,7 +252,7 @@ public class SimplePromotionEngineTest {
      * 2*D 30 + 15 = 45
      */
     @Test
-    public void testScenarioC_PromotionDisabled_NotApplied() {
+    public void testApplyPromotionScenario_PromotionDisabled_NotApplied() {
         Cart cart = new Cart();
         cart.add(Item.of('A', 3, getItemPrice('A')));
         cart.add(Item.of('B', 5, getItemPrice('B')));
