@@ -248,8 +248,8 @@ public class SimplePromotionEngineTest {
      *
      * 3*A 130
      * 5*B 45 + 45 +30 - 120
-     * 1*C -
-     * 2*D 30 + 15 = 45
+     * 1*C - 20
+     * 2*D 30
      */
     @Test
     public void testApplyPromotionScenario_PromotionDisabled_NotApplied() {

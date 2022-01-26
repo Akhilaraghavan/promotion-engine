@@ -15,7 +15,7 @@ See test [BuyTwoSKUItemsForFixedPrice](src/test/java/com/aragh/promotion/BuyTwoS
 
 
 **Note and Considerations**:  
-- More promotion types can be added by implementing the PromotionOffer.  
+- More promotion types can be added by implementing the PromotionOffer.
 - The promotions are mutually exclusive and its assumed that if one promotion 
 is applied on one sku then others are ignored. case 2 => either 2A = 30 or A=A40%
 - The problem statement mentions that the cart has a list of single character sku, the Item
@@ -23,7 +23,9 @@ class has an skuId of type Character. However, this could be updated to use Stri
 - Basic validation exists for quantity, skuId and price and while creating and applying the promotion.
 - Logging and Exception handling is basic and there is scope for improvement
 - There is no Dependency injection used in the tests or the CartCheckoutMain. This is also a good consideration
-for improvement
+for improvement 
+- The order of the promotion applied is the insertion order. There is a scope for improvisation where
+    sort order could be prioritized, For example : the best promotion offer to be applied first
 - PMD run locally to check cyclomatic complexity. I have not included
 the maven maven-pmd-plugin as the build time can increase due to dependencies download.
 The following ruleSets were applied
