@@ -14,7 +14,7 @@ public interface PromotionOffer {
     List<Character> getPromotionSKUIds();
 
     /**
-     * Apply the promotion on the subject.
+     * Apply the promotion on the individual or combined SKUs.
      * @param subject PromotionSubject with a list of Items {@link Item}
      */
     void apply(PromotionSubject subject);

@@ -24,7 +24,7 @@ class has an skuId of type Character. However, this could be updated to use Stri
 - Logging and Exception handling is basic and there is scope for improvement
 - There is no Dependency injection used in the tests or the CartCheckoutMain. This is also a good consideration
 for improvement
-- PMD run locally and the code does not have cyclomatic complexity. I have not included
+- PMD run locally to check cyclomatic complexity. I have not included
 the maven maven-pmd-plugin as the build time can increase due to dependencies download.
 The following ruleSets were applied
 ````
@@ -35,7 +35,7 @@ The following ruleSets were applied
 ````
 
 ### Usage
-This is a maven project and comes with maven wrapper  
+This is a Java (Version: 11) and maven project and comes with maven wrapper  
 To build the project, Clone and Navigate to the downloaded directory and run the command from terminal
 > ./mvnw clean package
 

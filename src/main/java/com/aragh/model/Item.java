@@ -18,7 +18,7 @@ public final class Item {
     private final BigDecimal itemPrice;
 
     /**
-     *  The number of same item in the cart
+     *  The amount of same item in the cart
      */
     private Integer quantity;
 
