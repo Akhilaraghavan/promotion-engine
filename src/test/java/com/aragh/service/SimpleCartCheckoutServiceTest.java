@@ -2,6 +2,7 @@ package com.aragh.service;
 
 import com.aragh.model.Cart;
 import com.aragh.model.Item;
+import com.aragh.model.Product;
 import com.aragh.promotion.engine.PromotionEngine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,9 +30,10 @@ public class SimpleCartCheckoutServiceTest {
     @Test
     public void testCartTotalsBeforePromotion() {
         Cart cart = new Cart();
-        cart.add(Item.of('A', 1, BigDecimal.valueOf(50)));
-        cart.add(Item.of('B', 1, BigDecimal.valueOf(30)));
-        cart.add(Item.of('C', 1, BigDecimal.valueOf(20)));
+        cart.add(Item.of(Product.of('A', BigDecimal.valueOf(50)), 1));
+        cart.add(Item.of(Product.of('B', BigDecimal.valueOf(30)), 1));
+        cart.add(Item.of(Product.of('C',  BigDecimal.valueOf(20)), 1));
+
         doNothing().when(promotionEngine).applyPromotion(ArgumentMatchers.any(Cart.class));
         BigDecimal totals = simplePricingCalculator.getCartTotal(cart);
         assertEquals(BigDecimal.valueOf(100), totals);
@@ -41,10 +43,9 @@ public class SimpleCartCheckoutServiceTest {
     @Test
     public void testCartTotalsAfterPromotion() {
         Cart cart = new Cart();
-        cart.add(Item.of('A', 1, BigDecimal.valueOf(50)));
-        cart.add(Item.of('B', 1, BigDecimal.valueOf(30)));
-        cart.add(Item.of('C', 1, BigDecimal.valueOf(20)));
-
+        cart.add(Item.of(Product.of('A', BigDecimal.valueOf(50)), 1));
+        cart.add(Item.of(Product.of('B', BigDecimal.valueOf(30)), 1));
+        cart.add(Item.of(Product.of('C',  BigDecimal.valueOf(20)), 1));
         doAnswer(invocation -> {
             Cart pCart = invocation.getArgument(0);
             List<Item> items = pCart.getItems();
@@ -62,10 +63,10 @@ public class SimpleCartCheckoutServiceTest {
     @Test
     public void testCartTotalsAfterPromotion_AddSameItemToCart() {
         Cart cart = new Cart();
-        cart.add(Item.of('A', 1, BigDecimal.valueOf(50)));
-        cart.add(Item.of('B', 1, BigDecimal.valueOf(30)));
-        cart.add(Item.of('C', 1, BigDecimal.valueOf(20)));
-        cart.add(Item.of('A', 3, BigDecimal.valueOf(50)));
+        cart.add(Item.of(Product.of('A', BigDecimal.valueOf(50)), 1));
+        cart.add(Item.of(Product.of('B', BigDecimal.valueOf(30)), 1));
+        cart.add(Item.of(Product.of('C',  BigDecimal.valueOf(20)), 1));
+        cart.add(Item.of(Product.of('A', BigDecimal.valueOf(50)), 3));
 
         assertEquals(3, cart.getItems().size());
         assertEquals(4, cart.getItems().get(0).getQuantity());

@@ -9,18 +9,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
+public class BuyNItemsOfSKUForFixedPrice extends BasePromotionOffer implements PromotionOffer {
 
     private static final Logger LOGGER = Logger.getLogger(BuyNItemsOfSKUForFixedPrice.class.getName());
 
-    private final int id;
     private final Character skuId;
     private final int promotionQuantity;
     private final BigDecimal promotionPrice;
     private boolean enabled;
 
     public BuyNItemsOfSKUForFixedPrice(Character skuId, int promotionQuantity, BigDecimal promotionPrice) {
-        this.id = skuId.hashCode() * promotionQuantity;
+        super(skuId.hashCode() * promotionQuantity, true);
         this.promotionQuantity = promotionQuantity;
         this.skuId = Objects.requireNonNull(skuId, "Stock keeping unit is not set");
         if (promotionQuantity <= 0) {
@@ -30,7 +29,6 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
         if (this.promotionPrice.signum() <= 0) {
             throw new IllegalArgumentException("Promotion price is incorrect. Price should be a positive non-zero number");
         }
-        this.enabled = true;
     }
 
     /**
@@ -64,21 +62,6 @@ public class BuyNItemsOfSKUForFixedPrice implements PromotionOffer {
     @Override
     public List<Character> getPromotionSKUIds() {
         return List.of(skuId);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public int getId() {
-        return id;
     }
 
     @Override

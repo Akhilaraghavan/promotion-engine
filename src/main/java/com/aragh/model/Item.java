@@ -6,16 +6,9 @@ import java.util.Objects;
 public final class Item {
 
     /**
-     *  Stock keeping unit id of the item is a single character
+     * product for this Item
      */
-    private final Character skuId;
-
-    /**
-     *  Item Price
-     *  The type is BigDecimal as floats and double are not suited for price
-     *  calculations
-     */
-    private final BigDecimal itemPrice;
+    private final Product product;
 
     /**
      *  The amount of same item in the cart
@@ -32,18 +25,13 @@ public final class Item {
      */
     private boolean isPromotionApplied;
 
-    private Item(Character skuId, Integer quantity, BigDecimal itemPrice) {
-        this.skuId = Objects.requireNonNull(skuId, "Stock Keeping unit Id is not set");
+    private Item(Product product, Integer quantity) {
+        this.product = Objects.requireNonNull(product, "product is not set");
         this.quantity = Objects.requireNonNull(quantity, "Quantity is not set");
-        this.itemPrice = Objects.requireNonNull(itemPrice, "Item price is not set");
     }
 
-    public static Item of(Character skuId, Integer quantity, BigDecimal itemPrice) {
-        return new Item(skuId, quantity, itemPrice);
-    }
-
-    public Character getSkuId() {
-        return skuId;
+    public static Item of(Product product, Integer quantity) {
+        return new Item(product, quantity);
     }
 
     public Integer getQuantity() {
@@ -62,20 +50,28 @@ public final class Item {
         this.quantity += quantity;
     }
 
-    public BigDecimal getItemPrice() {
-        return itemPrice;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return itemPrice.multiply(BigDecimal.valueOf(quantity));
-    }
-
     public BigDecimal getTotalPriceAfterPromotion() {
         return isPromotionApplied ? totalPriceAfterPromotion : getTotalPrice();
     }
 
+    private BigDecimal getTotalPrice() {
+        return product.getUnitPrice().multiply(BigDecimal.valueOf(quantity));
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
     public void setTotalPriceAfterPromotion(BigDecimal totalPriceAfterPromotion) {
         this.totalPriceAfterPromotion = totalPriceAfterPromotion;
+    }
+
+    public BigDecimal getItemPrice() {
+        return product.getUnitPrice();
+    }
+
+    public Character getSkuId() {
+        return product.getSkuId();
     }
 
     @Override
@@ -87,18 +83,18 @@ public final class Item {
             return false;
         }
         Item item = (Item) otherItem;
-        return skuId.equals(item.skuId);
+        return product.getSkuId().equals(item.getProduct().getSkuId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(skuId);
+        return Objects.hash(product.getSkuId());
     }
 
     @Override
     public String toString() {
         return "Item{" +
-                "skuId='" + skuId + '\'' +
+                "skuId='" + product.getSkuId() + '\'' +
                 '}';
     }
 }

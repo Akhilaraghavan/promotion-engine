@@ -1,6 +1,7 @@
 package com.aragh.promotion;
 
 import com.aragh.model.Item;
+import com.aragh.model.Product;
 import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.promotion.model.PromotionSubject;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class BuyTwoSKUItemsForFixedPriceTest {
     public void applyPromotion_ItemAndPromotionMisMatch_OneItemIsNotPresent_ThrowsException() {
         //Assign
         BuyTwoSKUItemsForFixedPrice buyTwoSKUItemsForFixedPrice = new BuyTwoSKUItemsForFixedPrice('A' , 'B', new BigDecimal(30));
-        Item skuItem = Item.of('B' , 2, new BigDecimal(10));
+        Item skuItem = Item.of(Product.of('B' , new BigDecimal(10)), 2);
         PromotionSubject promotionSubject = new PromotionSubject(List.of(skuItem));
 
         //Act and Assert
@@ -51,8 +52,8 @@ public class BuyTwoSKUItemsForFixedPriceTest {
     public void applyPromotion() {
         //Assign
         BuyTwoSKUItemsForFixedPrice buyTwoSKUItemsForFixedPrice = new BuyTwoSKUItemsForFixedPrice('A' , 'B', new BigDecimal(30));
-        Item skuItem1 = Item.of('B' , 2, new BigDecimal(50));
-        Item skuItem2 = Item.of('A' , 2, new BigDecimal(50));
+        Item skuItem1 = Item.of(Product.of('B' , new BigDecimal(50)), 2);
+        Item skuItem2 = Item.of(Product.of('A' ,  new BigDecimal(50)), 2);
         PromotionSubject promotionSubject = new PromotionSubject(List.of(skuItem1, skuItem2));
         //Act
         buyTwoSKUItemsForFixedPrice.apply(promotionSubject);

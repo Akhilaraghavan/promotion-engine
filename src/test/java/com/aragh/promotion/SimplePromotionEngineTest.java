@@ -7,8 +7,8 @@ import com.aragh.promotion.engine.PromotionEngine;
 import com.aragh.promotion.engine.SimplePromotionEngine;
 import com.aragh.promotion.store.InMemoryPromotionStore;
 import com.aragh.promotion.store.PromotionStore;
+import com.aragh.service.ProductService;
 import com.aragh.store.InMemoryProductStore;
-import com.aragh.store.ProductStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SimplePromotionEngineTest {
 
-    private ProductStore productStore;
+    private ProductService productService;
     private PromotionStore promotionStore;
 
     private PromotionEngine promotionEngine;
 
     @BeforeEach
     public void beforeEach() {
-        this.productStore = new InMemoryProductStore();
+        this.productService = new ProductService(new InMemoryProductStore());
         this.promotionStore = new InMemoryPromotionStore();
         this.promotionEngine = new SimplePromotionEngine(promotionStore);
         setupProducts();
@@ -39,15 +39,15 @@ public class SimplePromotionEngineTest {
     }
 
     private void setupProducts() {
-        productStore.saveProduct(Product.of('A', BigDecimal.valueOf(50)));
-        productStore.saveProduct(Product.of('B', BigDecimal.valueOf(30)));
-        productStore.saveProduct(Product.of('C', BigDecimal.valueOf(20)));
-        productStore.saveProduct(Product.of('D', BigDecimal.valueOf(15)));
+        productService.saveProduct(Product.of('A', BigDecimal.valueOf(50)));
+        productService.saveProduct(Product.of('B', BigDecimal.valueOf(30)));
+        productService.saveProduct(Product.of('C', BigDecimal.valueOf(20)));
+        productService.saveProduct(Product.of('D', BigDecimal.valueOf(15)));
     }
 
 
-    private BigDecimal getItemPrice(Character skuId) {
-        return productStore.findBySkuId(skuId).orElseThrow().getUnitPrice();
+    private Product getProduct(Character skuId) {
+        return productService.findProductBySkuId(skuId);
     }
 
     /**
@@ -60,9 +60,9 @@ public class SimplePromotionEngineTest {
     public void testApplyPromotionScenarioA_NoPromotionsApplied() {
         //Assign
         Cart cart = new Cart();
-        cart.add(Item.of('A', 1, getItemPrice('A')));
-        cart.add(Item.of('B', 1, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of(getProduct('A'), 1));
+        cart.add(Item.of(getProduct('B'), 1));
+        cart.add(Item.of(getProduct('C'), 1));
 
         //Act
         promotionEngine.applyPromotion(cart);
@@ -81,9 +81,9 @@ public class SimplePromotionEngineTest {
     public void testApplyPromotionScenarioB_PromotionAppliedOnAAndB() {
         //Assign
         Cart cart = new Cart();
-        cart.add(Item.of('A', 5, getItemPrice('A')));
-        cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of(getProduct('A'), 5));
+        cart.add(Item.of(getProduct('B'), 5));
+        cart.add(Item.of(getProduct('C'), 1));
 
         //Act
         promotionEngine.applyPromotion(cart);
@@ -114,9 +114,9 @@ public class SimplePromotionEngineTest {
         promotionStore.save(new BuyNItemsOfSKUForFixedPrice('A', 2, BigDecimal.valueOf(100)));
 
         Cart cart = new Cart();
-        cart.add(Item.of('A', 5, getItemPrice('A')));
-        cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
+        cart.add(Item.of(getProduct('A'), 5));
+        cart.add(Item.of(getProduct('B'), 5));
+        cart.add(Item.of(getProduct('C'), 1));
 
         promotionEngine.applyPromotion(cart);
 
@@ -143,10 +143,10 @@ public class SimplePromotionEngineTest {
     @Test
     public void testApplyPromotionScenarioC_PromotionAppliedOnAllItems() {
         Cart cart = new Cart();
-        cart.add(Item.of('A', 3, getItemPrice('A')));
-        cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
-        cart.add(Item.of('D', 1, getItemPrice('D')));
+        cart.add(Item.of(getProduct('A'), 3));
+        cart.add(Item.of(getProduct('B'), 5));
+        cart.add(Item.of(getProduct('C'), 1));
+        cart.add(Item.of(getProduct('D'), 1));
 
         promotionEngine.applyPromotion(cart);
 
@@ -184,10 +184,10 @@ public class SimplePromotionEngineTest {
 
         //Assign
         Cart cart = new Cart();
-        cart.add(Item.of('A', 3, getItemPrice('A')));
-        cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 3, getItemPrice('C')));
-        cart.add(Item.of('D', 1, getItemPrice('D')));
+        cart.add(Item.of(getProduct('A'), 3));
+        cart.add(Item.of(getProduct('B'), 5));
+        cart.add(Item.of(getProduct('C'), 3));
+        cart.add(Item.of(getProduct('D'), 1));
 
         //Act
         promotionEngine.applyPromotion(cart);
@@ -220,10 +220,11 @@ public class SimplePromotionEngineTest {
     @Test
     public void testApplyPromotionScenario_PromotionAppliedOnAllItems_WithRemainingItemsAfterPromotionForD() {
         Cart cart = new Cart();
-        cart.add(Item.of('A', 3, getItemPrice('A')));
-        cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
-        cart.add(Item.of('D', 2, getItemPrice('D')));
+        cart.add(Item.of(getProduct('A'), 3));
+        cart.add(Item.of(getProduct('B'), 5));
+        cart.add(Item.of(getProduct('C'), 1));
+        cart.add(Item.of(getProduct('D'), 2));
+
 
         promotionEngine.applyPromotion(cart);
 
@@ -254,10 +255,10 @@ public class SimplePromotionEngineTest {
     @Test
     public void testApplyPromotionScenario_PromotionDisabled_NotApplied() {
         Cart cart = new Cart();
-        cart.add(Item.of('A', 3, getItemPrice('A')));
-        cart.add(Item.of('B', 5, getItemPrice('B')));
-        cart.add(Item.of('C', 1, getItemPrice('C')));
-        cart.add(Item.of('D', 2, getItemPrice('D')));
+        cart.add(Item.of(getProduct('A'), 3));
+        cart.add(Item.of(getProduct('B'), 5));
+        cart.add(Item.of(getProduct('C'), 1));
+        cart.add(Item.of(getProduct('D'), 2));
 
         //Disable the promotion with C&D
         promotionStore.getAllActivePromotions().get(2).setEnabled(false);
@@ -279,5 +280,71 @@ public class SimplePromotionEngineTest {
         Item itemD = cart.getItems().get(3);
         assertFalse(itemD.isPromotionApplied());
         assertEquals(BigDecimal.valueOf(30), itemD.getTotalPriceAfterPromotion());
+    }
+
+    /**
+    *
+    * 1*A 50
+    * 1*B 30
+    * 1*C 20
+    */
+    @Test
+    public void testApplyPromotionScenarioD_WithDiscount() {
+
+        promotionStore.save(new BuySKUItemWithDiscount('A', BigDecimal.valueOf(10)));
+
+        //Assign
+        Cart cart = new Cart();
+        cart.add(Item.of(getProduct('A'), 1));
+        cart.add(Item.of(getProduct('B'), 1));
+        cart.add(Item.of(getProduct('C'), 1));
+
+        //Act
+        promotionEngine.applyPromotion(cart);
+
+        Item itemB = cart.getItems().get(1);
+        assertFalse(itemB.isPromotionApplied());
+        assertEquals(BigDecimal.valueOf(30), itemB.getTotalPriceAfterPromotion());
+
+        Item itemC = cart.getItems().get(2);
+        assertFalse(itemC.isPromotionApplied());
+        assertEquals(BigDecimal.valueOf(20), itemC.getTotalPriceAfterPromotion());
+
+        Item itemA = cart.getItems().get(0);
+        assertTrue(itemA.isPromotionApplied());
+        assertEquals(0, BigDecimal.valueOf(45.00000).compareTo(itemA.getTotalPriceAfterPromotion()));
+    }
+
+    /**
+     *
+     * 1*A 50
+     * 1*B 30
+     * 1*C 20
+     */
+    @Test
+    public void testApplyPromotionScenarioD_WithDiscount_Rounding() {
+
+        promotionStore.save(new BuySKUItemWithDiscount('A', BigDecimal.valueOf(10.2)));
+
+        //Assign
+        Cart cart = new Cart();
+        cart.add(Item.of(getProduct('A'), 1));
+        cart.add(Item.of(getProduct('B'), 1));
+        cart.add(Item.of(getProduct('C'), 1));
+
+        //Act
+        promotionEngine.applyPromotion(cart);
+
+        Item itemB = cart.getItems().get(1);
+        assertFalse(itemB.isPromotionApplied());
+        assertEquals(BigDecimal.valueOf(30), itemB.getTotalPriceAfterPromotion());
+
+        Item itemC = cart.getItems().get(2);
+        assertFalse(itemC.isPromotionApplied());
+        assertEquals(BigDecimal.valueOf(20), itemC.getTotalPriceAfterPromotion());
+
+        Item itemA = cart.getItems().get(0);
+        assertTrue(itemA.isPromotionApplied());
+        assertEquals(0, BigDecimal.valueOf(44.90000).compareTo(itemA.getTotalPriceAfterPromotion()));
     }
 }

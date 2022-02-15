@@ -1,6 +1,7 @@
 package com.aragh.promotion;
 
 import com.aragh.model.Item;
+import com.aragh.model.Product;
 import com.aragh.promotion.engine.ItemPromotionMismatchException;
 import com.aragh.promotion.model.PromotionSubject;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class BuyNItemsOfSKUForFixedPriceTest {
     public void applyPromotion_ItemQuantityLessThanPromotionQuantity_PromotionNotApplied() {
         //Assign
         BuyNItemsOfSKUForFixedPrice buyNItemsOfSKUForFixedPrice = new BuyNItemsOfSKUForFixedPrice('A' , 5, new BigDecimal(30));
-        Item skuItem = Item.of('A' , 2, new BigDecimal(10));
+        Item skuItem = Item.of(Product.of('A' ,  new BigDecimal(10)), 2);
         PromotionSubject promotionSubject = new PromotionSubject(List.of(skuItem));
 
         //Act
@@ -62,7 +63,7 @@ public class BuyNItemsOfSKUForFixedPriceTest {
 
         //Assign
         BuyNItemsOfSKUForFixedPrice buyNItemsOfSKUForFixedPrice = new BuyNItemsOfSKUForFixedPrice('A' , 5, new BigDecimal(30));
-        Item skuItem = Item.of('B' , 2, new BigDecimal(10));
+        Item skuItem = Item.of(Product.of('B',  new BigDecimal(10)) , 2);
         PromotionSubject promotionSubject = new PromotionSubject(List.of(skuItem));
 
         //Act and Assert
@@ -73,7 +74,7 @@ public class BuyNItemsOfSKUForFixedPriceTest {
     public void applyPromotion() {
         //Assign
         BuyNItemsOfSKUForFixedPrice buyNItemsOfSKUForFixedPrice = new BuyNItemsOfSKUForFixedPrice('A' , 5, new BigDecimal(30));
-        Item skuItem = Item.of('A' , 7, new BigDecimal(10));
+        Item skuItem = Item.of(Product.of('A' , new BigDecimal(10)), 7);
         PromotionSubject promotionSubject = new PromotionSubject(List.of(skuItem));
 
         //Act

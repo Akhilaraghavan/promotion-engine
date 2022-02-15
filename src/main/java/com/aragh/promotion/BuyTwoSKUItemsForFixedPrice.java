@@ -9,23 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
+public class BuyTwoSKUItemsForFixedPrice extends BasePromotionOffer implements PromotionOffer {
 
     private final Character skuId1;
     private final Character skuId2;
     private final BigDecimal promotionPrice;
-    private boolean enabled;
-    private final int id;
 
     public BuyTwoSKUItemsForFixedPrice(Character skuId1, Character skuId2, BigDecimal promotionPrice) {
+        super(skuId1.hashCode() + skuId2.hashCode(), true);
         this.skuId1 = Objects.requireNonNull(skuId1, "SKU1 id is not provided");
         this.skuId2 = Objects.requireNonNull(skuId2, "SKU2 id is not provided");
         this.promotionPrice = Objects.requireNonNull(promotionPrice, "Price is not set");
         if (this.promotionPrice.signum() <= 0) {
             throw new IllegalArgumentException("Promotion price is incorrect. Price should be a positive non-zero number");
         }
-        this.enabled = true;
-        this.id = skuId1.hashCode() + skuId2.hashCode();
     }
 
     /**
@@ -64,21 +61,6 @@ public class BuyTwoSKUItemsForFixedPrice implements PromotionOffer {
     @Override
     public List<Character> getPromotionSKUIds() {
         return Arrays.asList(skuId1, skuId2);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public int getId() {
-        return id;
     }
 
     @Override

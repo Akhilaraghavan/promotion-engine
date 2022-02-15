@@ -10,9 +10,9 @@ import com.aragh.promotion.engine.SimplePromotionEngine;
 import com.aragh.promotion.store.InMemoryPromotionStore;
 import com.aragh.promotion.store.PromotionStore;
 import com.aragh.service.CartCheckoutService;
+import com.aragh.service.ProductService;
 import com.aragh.service.SimpleCartCheckoutService;
 import com.aragh.store.InMemoryProductStore;
-import com.aragh.store.ProductStore;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -38,12 +38,12 @@ public class CartCheckoutMain {
         PROMOTION_MAP.put(Pattern.compile("(\\w) & (\\w) for (\\d+(,\\d{1,2})?)"), BuyTwoSKUItemsForFixedPrice.class);
     }
 
-    private final ProductStore productStore;
+    private final ProductService productService;
     private final PromotionStore promotionStore;
     private final CartCheckoutService cartCheckoutService;
 
     public CartCheckoutMain() {
-        productStore = new InMemoryProductStore();
+        productService = new ProductService(new InMemoryProductStore());
         promotionStore = new InMemoryPromotionStore();
         cartCheckoutService = new SimpleCartCheckoutService(new SimplePromotionEngine(promotionStore));
     }
@@ -74,7 +74,7 @@ public class CartCheckoutMain {
             while (matcher.find()) {
                 int quantity = Integer.parseInt(matcher.group(1));
                 Character sku = matcher.group(2).charAt(0);
-                cart.add(Item.of(sku, quantity, productStore.findBySkuId(sku).orElseThrow().getUnitPrice()));
+                cart.add(Item.of(productService.findProductBySkuId(sku), quantity));
             }
             --numberOfItems;
         }
@@ -138,6 +138,6 @@ public class CartCheckoutMain {
             }
             return Product.of(skuWithUnitPrice[0].charAt(0),
                     BigDecimal.valueOf(Long.parseLong(skuWithUnitPrice[1])));
-        }).forEach(productStore::saveProduct);
+        }).forEach(productService::saveProduct);
     }
 }
